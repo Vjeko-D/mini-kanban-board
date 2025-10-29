@@ -10,6 +10,17 @@ interface ColumnProps {
   onMoveTask: (taskId: number, newStatus: TaskWithStatus['status']) => void;
 }
 
+const getDotClass = (status: TaskWithStatus['status']) => {
+  switch (status) {
+    case 'todo':
+      return 'column-dot--todo';
+    case 'in-progress':
+      return 'column-dot--progress';
+    case 'done':
+      return 'column-dot--done';
+  }
+};
+
 const Column: React.FC<ColumnProps> = ({ title, tasks, status, onMoveTask }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'task',
@@ -27,7 +38,10 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, status, onMoveTask }) => 
       className={`column ${isOver ? 'column--over' : ''}`}
     >
       <div className="column-header">
-        <h3 className="column-title">{title}</h3>
+        <div className="column-title">
+          <div className={`column-dot ${getDotClass(status)}`} />
+          <h3>{title}</h3>
+        </div>
         <span className="column-count">({tasks.length})</span>
       </div>
       <div className="column-content">
