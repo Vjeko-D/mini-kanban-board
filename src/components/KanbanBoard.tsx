@@ -26,13 +26,22 @@ const KanbanBoard: React.FC = () => {
   const [tasks, dispatch] = useReducer(taskReducer, []);
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem('kanban-tasks');
-    if (savedTasks) {
-      dispatch({ type: 'LOAD_TASKS', tasks: JSON.parse(savedTasks) });
-    } else {
-      const mappedTasks = initialTasks.map(mapTaskToStatus);
-      dispatch({ type: 'LOAD_TASKS', tasks: mappedTasks });
+    const seed = () => initialTasks.map(mapTaskToStatus);
+
+    try {
+      const saved = localStorage.getItem('kanban-tasks');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          dispatch({ type: 'LOAD_TASKS', tasks: parsed });
+          return;
+        }
+      }
+    } catch {
+      // ignore and seed
     }
+
+    dispatch({ type: 'LOAD_TASKS', tasks: seed() });
   }, []);
 
   useEffect(() => {

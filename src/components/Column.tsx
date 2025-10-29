@@ -1,4 +1,5 @@
-import React, { useDrop } from 'react-dnd';
+import React from 'react';
+import { useDrop } from 'react-dnd';
 import { TaskWithStatus } from '../types';
 import TaskCard from './TaskCard';
 
